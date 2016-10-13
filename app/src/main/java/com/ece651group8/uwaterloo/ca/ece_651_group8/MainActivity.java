@@ -42,9 +42,6 @@ public class MainActivity extends AppCompatActivity {
         doctorButton=(RadioButton)findViewById(R.id.doctor_id);
 
 
-
-
-
         //Button
         signOn=(Button)findViewById(R.id.sign_on_button);
         signOn.setOnClickListener(new View.OnClickListener() {
@@ -93,9 +90,6 @@ public class MainActivity extends AppCompatActivity {
 //          }
             }
         });
-
-
-
     }
 
 }
