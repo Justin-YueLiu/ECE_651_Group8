@@ -2,86 +2,109 @@ package com.ece651group8.uwaterloo.ca.ece_651_group8;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
-import android.widget.Toast;
-import android.widget.ViewFlipper;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
-@SuppressWarnings("ALL")
-public class PatientActivity extends AppCompatActivity implements View.OnTouchListener {
+import com.ece651group8.uwaterloo.ca.ece_651_group8.SlidingMenu;
 
-    private ViewFlipper Flipper;
-    private GestureDetector Detector;
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Timer;
+import java.util.TimerTask;
 
-    //private Button DoctorComment;
-    //private Button EmergencyCall;
+import ca.uwaterloo.sensortoy.LineGraphView;
+
+
+public class PatientActivity extends AppCompatActivity {
+
+    private SlidingMenu mLeftMenu;
+    private TextView bloodPressureText;
+    private int bloodPressure = 80;
+    private LineGraphView heartRate;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getSupportActionBar().hide();
         setContentView(R.layout.activity_patient);
+        mLeftMenu = (SlidingMenu)findViewById(R.id.id_menu);
 
-        Flipper = (ViewFlipper) findViewById(R.id.flipper_p);
-        Flipper.addView(getImageView(R.mipmap.heartrate1));
-        Flipper.addView(getImageView(R.mipmap.heartrate2));
-        Flipper.addView(getImageView(R.mipmap.heartrate3));
-        Flipper.setOnTouchListener(this);
+        bloodPressureText = (TextView) findViewById(R.id.bloodPressure);
+        bloodPressureText.setText("Blood Pressure:"+bloodPressure);
 
-        Detector = new GestureDetector(new PatientActivity.simpleGestureListener());
+        LinearLayout mainComponent = (LinearLayout) findViewById(R.id.mainComponent);
+        heartRate = new LineGraphView(getApplicationContext(),100, Arrays.asList("heartbeat"));
+        mainComponent.addView(heartRate,0);
+
+
     }
 
-    private ImageView getImageView(int id){
-        ImageView imageView = new ImageView(this);
-        imageView.setImageResource(id);
-        return imageView;
-    }
+    public void heartBeatSimulation(){
 
-    public boolean onTouch(View v, MotionEvent event) {
-        return Detector.onTouchEvent(event);
-    }
+        float[] heartBeat = new float[0];
+        int i = 0;
 
-    private class simpleGestureListener extends GestureDetector.SimpleOnGestureListener{
-        final int FLING_MIN_DISTANCE = 100, FLING_MIN_VELOCITY = 200;
+        while (true){
 
+            while (i >= 72){
 
-        @Override
-        public boolean onDown(MotionEvent e) {
-            // TODO Auto-generated method stub
-            Toast.makeText(PatientActivity.this, "ondown", Toast.LENGTH_SHORT).show();
-            return true;
-        }
+                if (i < 32){
+                    heartBeat[0] = (float) (0.08*Math.sin(8* i));
+                }
+                else if (i >32 || i <48){
+                    heartBeat[0] = (float) (0.01*Math.sin(20* i -3.2)+0.046);
+                }
+                else {
+                    heartBeat[0] = (float) (0.065*Math.sin(10* i -4));
+                }
 
+                heartRate.addPoint(heartBeat);
 
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            // Fling left
-            if (e1.getX() - e2.getX() > FLING_MIN_DISTANCE && Math.abs(velocityX) > FLING_MIN_VELOCITY) {
-                Flipper.setInAnimation(AnimationUtils.loadAnimation(PatientActivity.this,
-                        R.anim.push_left_in));
-                Flipper.setOutAnimation(AnimationUtils.loadAnimation(PatientActivity.this,
-                        R.anim.push_left_out));
-                Flipper.showNext();
+                /*TimerTask task = new TimerTask(){
+                    public void run(){
 
-                Toast.makeText(PatientActivity.this, "Fling Left", Toast.LENGTH_SHORT).show();
-            } else if (e2.getX() - e1.getX() > FLING_MIN_DISTANCE && Math.abs(velocityX) > FLING_MIN_VELOCITY) {
-                // Fling right
-                Flipper.setInAnimation(AnimationUtils.loadAnimation(PatientActivity.this,
-                        R.anim.push_right_in));
-                Flipper.setOutAnimation(AnimationUtils.loadAnimation(PatientActivity.this,
-                        R.anim.push_right_out));
-                Flipper.showPrevious();
+                    }
+                };
 
-                Toast.makeText(PatientActivity.this, "Fling Right", Toast.LENGTH_SHORT).show();
+                Timer timer = new Timer();
+                timer.schedule(task, (long) 0.0001);*/
+
+                i = i+1;
             }
-            return true;
+
+            i = 0;
+
         }
     }
+    public void toggleMenu(View view){
+        mLeftMenu.toggle();
+    }
 
-    //doctor comments
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
 
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }

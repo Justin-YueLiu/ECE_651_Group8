@@ -16,7 +16,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".PatientActivity"/>
-        <activity android:name=".DoctorActivity"/>
         <activity android:name=".RelativeActivity"/>
     </application>
 

@@ -92,12 +92,6 @@
             android:id="@+id/relative_id"
             android:text="Relative" />
 
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/doctor_id"
-            android:text="Doctor" />
-
     </RadioGroup>
 
     <Button

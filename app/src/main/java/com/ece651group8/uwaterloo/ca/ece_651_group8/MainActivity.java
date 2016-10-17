@@ -21,7 +21,6 @@ public class MainActivity extends AppCompatActivity {
     private RadioGroup radioGroup;
     private RadioButton patientButton;
     private RadioButton relativeButton;
-    private RadioButton doctorButton;
     private EditText userName;
     private EditText passWord;
     private Button signOn;
@@ -39,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
         radioGroup=(RadioGroup)findViewById(R.id.radio_group_id);
         patientButton=(RadioButton)findViewById(R.id.patient_id);
         relativeButton=(RadioButton)findViewById(R.id.relative_id);
-        doctorButton=(RadioButton)findViewById(R.id.doctor_id);
 
 
         //Button
@@ -59,14 +57,9 @@ public class MainActivity extends AppCompatActivity {
                 } else if (relativeButton.isChecked()) {
                     //turn to the relative interface
                     Intent intent = new Intent();
-                    intent.setClass(MainActivity.this,RelativeActivity.class);
+                    intent.setClass(MainActivity.this, RelativeActivity.class);
                     startActivity(intent);
-                } else if (doctorButton.isChecked()) {
-                    //turn to the doctor interface
-                    Intent intent = new Intent();
-                    intent.setClass(MainActivity.this,DoctorActivity.class);
-                    startActivity(intent);
-                } else {
+                }else {
                     //error:you should choose your identity
                     Toast toast = Toast.makeText(MainActivity.this,"Please select your identity.",Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.CENTER,0,0);
