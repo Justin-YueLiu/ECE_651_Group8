@@ -9,7 +9,9 @@
         android:id="@+id/id_menu"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        custom:rightPadding="100dp">
+        custom:rightPadding="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -40,6 +42,40 @@
                     android:layout_height="wrap_content"
                     android:text="Connect Device"
                     />
+
+                <TextView
+                    android:id="@+id/textViewPhoneNo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/phone_label" />
+
+                <EditText
+                    android:id="@+id/editTextPhoneNo"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="phone"/>
+
+                <TextView
+                    android:id="@+id/textViewMessage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sms_label" />
+
+                <EditText
+                    android:id="@+id/editTextSMS"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"/>
+
+                <Button
+                    android:id="@+id/btnSendSMS"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/send_sms_label"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/sensorData"/>
             </LinearLayout>
 
         </LinearLayout>

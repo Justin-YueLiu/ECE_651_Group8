@@ -13,9 +13,6 @@ import android.widget.LinearLayout;
 
 import com.nineoldandroids.view.ViewHelper;
 import com.ece651group8.uwaterloo.ca.ece_651_group8.R;
-
-
-
 /**
  * Created by liuyue on 2016-10-16.
  */

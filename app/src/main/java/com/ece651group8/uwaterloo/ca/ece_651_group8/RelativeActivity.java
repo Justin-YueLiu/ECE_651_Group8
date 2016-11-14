@@ -1,6 +1,8 @@
 package com.ece651group8.uwaterloo.ca.ece_651_group8;
 
+import android.Manifest;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,15 +12,12 @@ import android.widget.TextView;
 
 import java.util.Arrays;
 
-import ca.uwaterloo.sensortoy.LineGraphView;
-
 
 public class RelativeActivity extends AppCompatActivity {
 
     private SlidingMenu mLeftMenu;
     private TextView bloodPressureText;
     private int bloodPressure = 80;
-    private LineGraphView heartRate;
 
 
     @Override
@@ -26,6 +25,7 @@ public class RelativeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 //        requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getSupportActionBar().hide();
+        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.SEND_SMS},1);
         setContentView(R.layout.activity_relative);
         mLeftMenu = (SlidingMenu)findViewById(R.id.id_menu);
 
@@ -33,9 +33,6 @@ public class RelativeActivity extends AppCompatActivity {
         bloodPressureText.setText("Blood Pressure:"+bloodPressure);
 
         LinearLayout mainComponent = (LinearLayout) findViewById(R.id.mainComponent);
-        heartRate = new LineGraphView(getApplicationContext(),100, Arrays.asList("heartbeat"));
-        mainComponent.addView(heartRate,0);
-
 
     }
 
@@ -57,8 +54,6 @@ public class RelativeActivity extends AppCompatActivity {
                 else {
                     heartBeat[0] = (float) (0.065*Math.sin(10* i -4));
                 }
-
-                heartRate.addPoint(heartBeat);
 
                 /*TimerTask task = new TimerTask(){
                     public void run(){
