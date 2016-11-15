@@ -8,6 +8,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +16,12 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+
+import com.ece651group8.uwaterloo.ca.ece_651_group8.bean.Config;
+import com.ece651group8.uwaterloo.ca.ece_651_group8.dao.TokenDao;
+import com.ece651group8.uwaterloo.ca.ece_651_group8.dao.impl.TokenDaoImpl;
+import com.ece651group8.uwaterloo.ca.ece_651_group8.util.DBUtils;
+import com.ece651group8.uwaterloo.ca.ece_651_group8.util.LoginUtils;
 
 import java.util.Map;
 
@@ -38,16 +45,21 @@ public class LoginActivity extends AppCompatActivity {
         ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},1);
         ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},1);
 
+        DBUtils.init(this);
 
 
         mUserName=(EditText)findViewById(R.id.user_name);
         mPassword=(EditText)findViewById(R.id.password);
 
+        mUserName.setText("patient1@gmail.com");
+        mPassword.setText("11111111");
 
         radioGroup=(RadioGroup)findViewById(R.id.radio_group_id);
         patientButton=(RadioButton)findViewById(R.id.patient_id);
         relativeButton=(RadioButton)findViewById(R.id.relative_id);
 
+
+        patientButton.setChecked(true);
 
         //Button
         signOn=(Button)findViewById(R.id.sign_on_button);
@@ -124,6 +136,7 @@ public class LoginActivity extends AppCompatActivity {
             focusView.requestFocus();
         } else {
 
+
             mAuthTask = new UserLoginTask(userName, password);
             mAuthTask.execute((Void) null);
         }
@@ -136,7 +149,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+
+    //
+    public class UserLoginTask extends AsyncTask<Void, Void, Map<String,Integer>> {
 
         private final String userName;
         private final String password;
@@ -146,45 +161,60 @@ public class LoginActivity extends AppCompatActivity {
             password = p;
         }
 
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
+        SQLiteDatabase db = DBUtils.getDatabase(LoginActivity.this);
+        private Config config = new Config();
+        String url = "http://"+config.getIp()+":"+config.getPort()+"/api-token-auth/";
 
-            try {
-                // Simulate network access.
-                Thread.sleep(2);
-            } catch (InterruptedException e) {
-                return false;
+        @Override
+
+
+
+
+        //verified the user in the background
+        //save and query token from db
+        //close db
+        protected Map<String,Integer> doInBackground(Void... params) {
+            // TODO: attempt authentication against a network service.
+                Map<String,Integer> map;
+            try{
+                map = LoginUtils.login(db,url,userName,password);
+
+                TokenDao tokenDao = new TokenDaoImpl();
+                String token = tokenDao.query(db);
+                //Log.i("tokenFromDB",token+"-------------");
+
+
+                DBUtils.closeDatabase(db);
+                return map;
+            } catch (Exception e){
+                e.printStackTrace();
+                return null;
             }
 
-            // TODO: register the new account here.
-            return true;
         }
 
+
+        //get Map from doInBackground
+        //turn to the user activity depending on their identity
         @Override
-        protected void onPostExecute(final Boolean success) {
+        protected void onPostExecute(final Map<String,Integer> map) {
             mAuthTask = null;
 
-            if (success) {
+            if (map.get("code")==200) {
 
-                if (patientButton.isChecked()) {
+                if (map.get("type")==2) {
                     //turn to the patient interface
                     Intent intent = new Intent();
                     intent.setClass(LoginActivity.this,PatientActivity.class);
                     startActivity(intent);
                     LoginActivity.this.finish();
 
-                } else if (relativeButton.isChecked()) {
+                } else if (map.get("type")==3) {
                     //turn to the relative interface
                     Intent intent = new Intent();
                     intent.setClass(LoginActivity.this, RelativeActivity.class);
                     startActivity(intent);
                     LoginActivity.this.finish();
-                }else {
-                    //error:you should choose your identity
-                    Toast toast = Toast.makeText(LoginActivity.this,"Please select your identity.",Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.CENTER,0,0);
-                    toast.show();
                 }
 
             } else {

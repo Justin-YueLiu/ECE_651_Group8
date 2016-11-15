@@ -64,6 +64,7 @@ public class PatientActivity extends AppCompatActivity {
         setContentView(R.layout.activity_patient);
         mLeftMenu = (SlidingMenu) findViewById(R.id.id_menu);
 
+
         bloodPressureText = (TextView) findViewById(R.id.bloodPressure);
         bloodPressureText.setText("Blood Pressure:" + bloodPressure);
 
