@@ -6,8 +6,10 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 
@@ -16,7 +18,7 @@ import com.ece651group8.uwaterloo.ca.ece_651_group8.R;
 /**
  * Created by liuyue on 2016-10-16.
  */
-public class SlidingMenu extends HorizontalScrollView {
+public class SlidingMenu extends HorizontalScrollView implements View.OnClickListener{
 
     private LinearLayout mWapper;
     private ViewGroup mMenu;
@@ -30,6 +32,11 @@ public class SlidingMenu extends HorizontalScrollView {
     private  boolean once = false;
 
     private boolean isOpen;
+
+
+
+
+
 
     /**
      * 未使用自定义属性时，调用
@@ -223,5 +230,10 @@ public class SlidingMenu extends HorizontalScrollView {
 //        set.play(animator1);
 ////        set.setDuration(1000);
 //        set.start();
+    }
+
+    @Override
+    public void onClick(View view) {
+
     }
 }
